@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Samjhao - सरल हिंदी में नोटिस समझें</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-icon">📄 ⚡</div>
+            <h1 class="app-title">Notice Samjhao</h1>
+            <p class="app-subtitle">सरकारी और बिजली नोटिस का आसान हिंदी में मतलब समझें</p>
+        </header>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for msg in messages %}
+                        <div class="flash-item">⚠️ {{ msg }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Privacy Card (Core Rule 4) -->
+        <div class="privacy-card">
+            <span class="privacy-icon">🔒</span>
+            <div class="privacy-text">
+                <strong>आपकी प्राइवेसी सुरक्षित है:</strong>
+                <p>फोटो पढ़ते ही तुरंत सिस्टम से डिलीट हो जाती है। हम कोई भी फोटो या पर्सनल जानकारी सर्वर पर सेव नहीं रखते हैं।</p>
+            </div>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="card upload-card">
+            <h2 class="card-title">नोटिस की फोटो अपलोड करें</h2>
+            <p class="card-desc">बिजली बिल या नोटिस का फोटो कैमरा से खींचे या गैलरी से चुनें:</p>
+
+            <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                <div class="file-input-wrapper">
+                    <!-- Standard file input with camera capture support -->
+                    <input 
+                        type="file" 
+                        name="notice_photo" 
+                        id="photoInput" 
+                        accept="image/*" 
+                        capture="environment" 
+                        required
+                    >
+                    <label for="photoInput" class="upload-btn primary-btn">
+                        <span class="btn-icon">📸</span>
+                        <span class="btn-text">फोटो खींचें या गैलरी से चुनें</span>
+                    </label>
+                </div>
+
+                <!-- Preview Area -->
+                <div id="previewContainer" class="preview-container hidden">
+                    <img id="imagePreview" src="" alt="चुनी गई फोटो">
+                    <p id="fileName" class="file-name-text"></p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-icon">⚡</span>
+                    नोटिस समझाओ (Samjhao)
+                </button>
+            </form>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading-box hidden">
+                <div class="spinner"></div>
+                <p class="loading-text">फोटो पढ़ी जा रही है... कृपया 2 से 3 सेकंड रुकें</p>
+            </div>
+        </div>
+
+        <!-- Helpful Tips -->
+        <div class="card tips-card">
+            <h3 class="tips-title">💡 अच्छी फोटो खींचने के आसान टिप्स:</h3>
+            <ul class="tips-list">
+                <li>नोटिस को सीधी समतल जगह पर रखें।</li>
+                <li>कमरे में या दिन की अच्छी रोशनी में फोटो लें।</li>
+                <li>पैसे (Amount) और आखिरी तारीख (Due Date) साफ दिखनी चाहिए।</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Phase 1 MVP • Made with ❤️ for Rural & Small-Town India</p>
+        </footer>
+    </div>
+
+    <!-- Simple JavaScript for instant preview & submit feedback -->
+    <script>
+        const photoInput = document.getElementById('photoInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const fileName = document.getElementById('fileName');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileName.textContent = "फोटो चुनी गई: " + file.name;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagePreview.src = event.target.result;
+                    previewContainer.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        uploadForm.addEventListener('submit', function() {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.6';
+            loadingIndicator.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

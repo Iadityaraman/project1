@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Samjhao - परिणाम (Result)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-icon">📄 ⚡</div>
+            <h1 class="app-title">Notice Samjhao</h1>
+            <p class="app-subtitle">आसान भाषा में आपका नतीजा</p>
+        </header>
+
+        {% if result.success %}
+            <!-- SUCCESS VIEW -->
+            <div class="notice-badge">⚡ बिजली बिल / नोटिस विवरण</div>
+
+            <main class="result-cards">
+                <!-- Section 1: Yeh kya hai -->
+                <div class="card result-card card-info">
+                    <div class="card-header">
+                        <span class="icon">📌</span>
+                        <h2 class="card-label">1. यह क्या है? (Yeh kya hai)</h2>
+                    </div>
+                    <p class="card-content-text">{{ result.what_is_this }}</p>
+                </div>
+
+                <!-- Section 2: Kitna paisa (Highlighted big number) -->
+                <div class="card result-card card-amount">
+                    <div class="card-header">
+                        <span class="icon">💰</span>
+                        <h2 class="card-label">2. कितना पैसा भरना है? (Kitna paisa)</h2>
+                    </div>
+                    <div class="highlight-amount">₹ {{ extracted.amount }}</div>
+                    <p class="card-content-text">{{ result.how_much_money }}</p>
+                </div>
+
+                <!-- Section 3: Aakhri tareekh (Highlighted date) -->
+                <div class="card result-card card-date">
+                    <div class="card-header">
+                        <span class="icon">📅</span>
+                        <h2 class="card-label">3. आखिरी तारीख क्या है? (Aakhri tareekh)</h2>
+                    </div>
+                    <div class="highlight-date">{{ extracted.due_date }}</div>
+                    <p class="card-content-text">{{ result.last_date }}</p>
+                </div>
+
+                <!-- Section 4: Ab kya karna hai -->
+                <div class="card result-card card-action">
+                    <div class="card-header">
+                        <span class="icon">✅</span>
+                        <h2 class="card-label">4. अब क्या करना है? (Ab kya karna hai)</h2>
+                    </div>
+                    <p class="card-content-text">{{ result.what_to_do }}</p>
+                </div>
+
+                <!-- Section 5: Kis se milna hai -->
+                <div class="card result-card card-contact">
+                    <div class="card-header">
+                        <span class="icon">🏢</span>
+                        <h2 class="card-label">5. किस से मिलना है? (Kis se milna hai)</h2>
+                    </div>
+                    <p class="card-content-text">{{ result.who_to_contact }}</p>
+                    <div class="meta-details">
+                        <p><strong>उपभोक्ता / खाता नंबर (Consumer No):</strong> {{ result.consumer_number }}</p>
+                        <p><strong>ऑफिस का नाम:</strong> {{ result.office_name }}</p>
+                    </div>
+                </div>
+            </main>
+
+        {% else %}
+            <!-- UNCLEAR PHOTO FALLBACK (Core Rule 3) -->
+            <div class="card error-card">
+                <div class="error-icon">⚠️</div>
+                <h2 class="error-title">Photo Saaf Nahi Hai</h2>
+                <h3 class="error-hindi">फोटो साफ नहीं है, दोबारा ट्राई करें</h3>
+                <p class="error-desc">
+                    कैमरा नोटिस के अक्षरों या जरूरी जानकारी (जैसे पैसे या आखिरी तारीख) को ठीक से नहीं पढ़ सका।
+                </p>
+
+                <div class="error-tips">
+                    <strong>कृपया यह ध्यान रखें:</strong>
+                    <ul>
+                        <li>नोटिस पर सीधी रोशनी हो, परछाई ना पड़े।</li>
+                        <li>कैमरे को नोटिस के पास रखकर साफ फोकस में फोटो लें।</li>
+                        <li>पैसे और तारीख वाले हिस्से को बिल्कुल सीधा रखें।</li>
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- MANDATORY DISCLAIMER (Core Rule 2) -->
+        <div class="disclaimer-card">
+            <span class="disclaimer-icon">⚠️</span>
+            <div class="disclaimer-text">
+                <strong>ज़रूरी सूचना:</strong>
+                <p>{{ result.disclaimer }}</p>
+            </div>
+        </div>
+
+        <!-- Privacy Confirmation -->
+        <p class="privacy-note">🔒 आपकी अपलोड की गई फोटो प्रोसेस होने के बाद तुरंत डिलीट कर दी गई है।</p>
+
+        <!-- Back Button -->
+        <div class="action-buttons">
+            <a href="{{ url_for('index') }}" class="primary-btn back-btn">
+                🔄 दूसरा नोटिस देखें (Naya Photo Upload Karein)
+            </a>
+        </div>
+
+        <footer class="app-footer">
+            <p>Phase 1 MVP • Notice Samjhao</p>
+        </footer>
+    </div>
+</body>
+</html>
